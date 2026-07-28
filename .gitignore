@@ -1,0 +1,44 @@
+# Flutter
+.dart_tool/
+.packages
+*.iml
+.idea/
+.vscode/
+build/
+
+# Native build
+*.o
+*.so
+*.dylib
+*.dll
+*.obj
+*.exp
+*.lib
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Android
+android/.gradle/
+android/local.properties
+android/build/
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# macOS
+macos/Pods/
+macos/.symlinks/
+
+# Example
+example/.dart_tool/
+example/build/
+example/.packages
