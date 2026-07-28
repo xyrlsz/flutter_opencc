@@ -85,3 +85,21 @@ add_library(flutter_opencc SHARED
     ${MARISA_SOURCES}
     ${XXHASH_SOURCES}
 )
+
+# OpenCC is compiled as part of this shared library; suppress dllexport/dllimport.
+target_compile_definitions(flutter_opencc PRIVATE
+    Opencc_BUILT_AS_STATIC
+    FLUTTER_OPENCC_SHARED
+    XXH_INLINE_ALL         # XXH3_64bits is only available as inline
+)
+
+# MSVC: use /FS to allow parallel cl.exe processes to share the same .pdb file
+if(MSVC)
+    target_compile_options(flutter_opencc PRIVATE /FS)
+endif()
+
+# Tell Flutter's build system to copy this DLL to the runner output directory.
+set(flutter_opencc_bundled_libraries
+    $<TARGET_FILE:flutter_opencc>
+    PARENT_SCOPE
+)

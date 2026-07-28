@@ -116,8 +116,7 @@ static GlobalCache& GetGlobalCache() {
 
 extern "C" {
 
-__attribute__((visibility("default")))
-__attribute__((used))
+FLUTTER_OPENCC_EXPORT
 OpenCCConverter* opencc_create(const char* configPath, const char* dataDir, char** errorOut) {
     if (!configPath) {
         const char* msg = "configPath is null";
@@ -157,8 +156,7 @@ OpenCCConverter* opencc_create(const char* configPath, const char* dataDir, char
     }
 }
 
-__attribute__((visibility("default")))
-__attribute__((used))
+FLUTTER_OPENCC_EXPORT
 char* opencc_convert(OpenCCConverter* converter, const char* input, char** errorOut) {
     if (!converter) {
         const char* msg = "converter is null";
@@ -195,22 +193,19 @@ char* opencc_convert(OpenCCConverter* converter, const char* input, char** error
     }
 }
 
-__attribute__((visibility("default")))
-__attribute__((used))
+FLUTTER_OPENCC_EXPORT
 void opencc_destroy(OpenCCConverter* converter) {
     delete converter;
     // Underlying opencc::ConverterPtr is managed by GlobalCache
     // Multiple opencc_create with same path share the same ConverterEntry
 }
 
-__attribute__((visibility("default")))
-__attribute__((used))
+FLUTTER_OPENCC_EXPORT
 void opencc_free_string(char* str) {
     free(str);
 }
 
-__attribute__((visibility("default")))
-__attribute__((used))
+FLUTTER_OPENCC_EXPORT
 char* opencc_version() {
     const char* ver = OPENCC_VERSION;
     if (!ver || ver[0] == '\0') ver = "unknown";

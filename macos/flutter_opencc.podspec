@@ -67,7 +67,7 @@ Pod::Spec.new do |s|
 
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
-    'OTHER_CPLUSPLUSFLAGS' => '-DOPENCC_ENABLE_DARTS -std=c++17',
+    'OTHER_CPLUSPLUSFLAGS' => '-DOPENCC_ENABLE_DARTS -DOpencc_BUILT_AS_STATIC -DFLUTTER_OPENCC_SHARED -DXXH_INLINE_ALL -std=c++17',
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
     'CLANG_CXX_LIBRARY' => 'libc++',
     'HEADER_SEARCH_PATHS' => [

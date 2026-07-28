@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "C:\\Users\\xyrlsz\\Desktop\\flutter_opencc\\android\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\xyrlsz\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\xyrlsz\\Desktop\\flutter_opencc\\android\\.cxx\\Debug\\p1o2d6f4\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\xyrlsz\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\xyrlsz\\Desktop\\flutter_opencc\\android\\.cxx\\Debug\\p1o2d6f4\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "flutter_opencc::@6890427a1f51a3e7e1df": {
+      "artifactName": "flutter_opencc",
+      "abi": "x86",
+      "output": "C:\\Users\\xyrlsz\\Desktop\\flutter_opencc\\example\\build\\flutter_opencc\\intermediates\\cxx\\Debug\\p1o2d6f4\\obj\\x86\\libflutter_opencc.so",
+      "runtimeFiles": []
+    }
+  }
+}

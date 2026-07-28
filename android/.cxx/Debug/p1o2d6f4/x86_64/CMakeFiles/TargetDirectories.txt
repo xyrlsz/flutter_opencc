@@ -1,0 +1,3 @@
+C:/Users/xyrlsz/Desktop/flutter_opencc/android/.cxx/Debug/p1o2d6f4/x86_64/CMakeFiles/flutter_opencc.dir
+C:/Users/xyrlsz/Desktop/flutter_opencc/android/.cxx/Debug/p1o2d6f4/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/xyrlsz/Desktop/flutter_opencc/android/.cxx/Debug/p1o2d6f4/x86_64/CMakeFiles/rebuild_cache.dir

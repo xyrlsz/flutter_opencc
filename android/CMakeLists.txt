@@ -86,6 +86,13 @@ add_library(flutter_opencc SHARED
     ${XXHASH_SOURCES}
 )
 
+# OpenCC is compiled as part of this shared library; suppress dllexport/dllimport.
+target_compile_definitions(flutter_opencc PRIVATE
+    Opencc_BUILT_AS_STATIC
+    FLUTTER_OPENCC_SHARED
+    XXH_INLINE_ALL         # XXH3_64bits is only available as inline
+)
+
 # Link Android system libraries
 target_link_libraries(flutter_opencc
     log

@@ -31,3 +31,6 @@ flutter:
         ffiPlugin: true
       linux:
         ffiPlugin: true
+
+  assets:
+  - assets/openccdata/

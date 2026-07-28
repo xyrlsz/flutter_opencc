@@ -85,3 +85,10 @@ add_library(flutter_opencc SHARED
     ${MARISA_SOURCES}
     ${XXHASH_SOURCES}
 )
+
+# OpenCC is compiled as part of this shared library; suppress dllexport/dllimport.
+target_compile_definitions(flutter_opencc PRIVATE
+    Opencc_BUILT_AS_STATIC
+    FLUTTER_OPENCC_SHARED
+    XXH_INLINE_ALL         # XXH3_64bits is only available as inline
+)
