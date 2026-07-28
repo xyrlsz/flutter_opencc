@@ -35,78 +35,106 @@
 
 ## 🚀 快速开始
 
-### 1. 添加依赖
+### 1. 克隆仓库并初始化子模块
 
-在 `pubspec.yaml` 中添加：
+```bash
+git clone https://github.com/xyrlsz/flutter_opencc.git
+cd flutter_opencc
+git submodule update --init --recursive
+```
+
+> **注意**：`git submodule update --init --recursive` 会拉取 `src/OpenCC` 和 `src/xxHash` 两个子模块，编译原生代码需要它们。
+
+### 2. 添加依赖
+
+在目标项目的 `pubspec.yaml` 中添加本地依赖：
+
+```yaml
+dependencies:
+  flutter_opencc:
+    path: ./flutter_opencc   # 指向你克隆下来的本地路径
+```
+
+> **提示**：`path` 依赖适合本地开发调试，修改源码后无需重新 `pub get`，`flutter pub get` 会自动链接。
+
+如果你希望直接从 Git 引用（不 clone 到本地）：
 
 ```yaml
 dependencies:
   flutter_opencc:
     git:
       url: https://github.com/xyrlsz/flutter_opencc.git
+      ref: v1.0.0  # 可选：指定 tag / 分支 / commit
 ```
 
-### 2. 初始化 OpenCC 数据
+> **注意**：通过 git 依赖安装时，`pub get` **不会**自动拉取子模块（`src/OpenCC`、`src/xxHash`）。
+> 如果仅使用预编译二进制，则无需关心；如需修改原生代码，请先手动 clone 并初始化子模块。
 
-OpenCC 需要字典数据文件（`.ocd2` 和 `.json` 配置文件）。你需要：
+### 3. 使用（字典数据已内建）
 
-- **Android**: 将 `src/OpenCC/data/` 中的字典文件打包到 assets，首次使用时复制到应用文件目录
-- **iOS/macOS**: 将字典文件添加到 Bundle Resources
-- **Windows/Linux**: 将字典文件放置在应用可访问的路径
-
-### 3. 使用
+本插件已将全部字典文件打包为 Flutter Package Asset，开箱即用：
 
 ```dart
 import 'package:flutter_opencc/flutter_opencc.dart';
+
+// 一行代码提取内建字典到本地文件系统（仅首次需要）
+final dataDir = await OpenCCData.prepareData();
 
 // 方式一：一次性转换（自动管理资源）
 String result = OpenCCSimple.convert(
   '鼠标',
   OpenCCConfig.s2t,
-  dataDir: '/path/to/openccdata',
+  dataDir: dataDir,
 );
 print(result); // 滑鼠
 
 // 方式二：复用 Converter 实例（批量转换时更高效）
-final converter = OpenCC(OpenCCConfig.s2t, dataDir: '/path/to/openccdata');
+final converter = OpenCC(OpenCCConfig.s2t, dataDir: dataDir);
 print(converter.convert('鼠标'));       // 滑鼠
 print(converter.convert('分辨率'));     // 解析度
-print(converter.convert('硅二极管'));   // 矽二極體
 converter.dispose();
 
 // 方式三：批量转换
 List<String> results = OpenCCSimple.convertAll(
   ['鼠标', '分辨率', '硅二极管'],
   OpenCCConfig.s2t,
-  dataDir: '/path/to/openccdata',
+  dataDir: dataDir,
 );
 ```
+
+> **注意**：`OpenCCData.prepareData()` 从 Flutter Asset Bundle 提取字典到系统临时目录（`{tempDir}/flutter_opencc_data/`），
+> 已提取的文件会跳过以提高速度。如需指定存放目录，可传 `targetDir` 参数。
 
 ## 🏗 项目结构
 
 ```
 flutter_opencc/
+├── assets/
+│   └── openccdata/                   # 📦 内建字典文件 (.ocd2 + .json)
 ├── lib/
 │   ├── flutter_opencc.dart           # 库入口，导出公开 API
 │   └── src/
 │       ├── opencc.dart               # 核心 OpenCC 类
 │       ├── opencc_config.dart        # 转换配置枚举
 │       ├── opencc_exception.dart     # 异常类型
+│       ├── data_loader.dart          # 字典数据提取工具（OpenCCData）
 │       └── native/
 │           ├── bindings.dart         # FFI 类型定义
 │           └── library.dart          # 动态库加载
-├── src/                              # ← 原生 C/C++ 源码
+├── src/                              # ⚙️ 原生 C/C++ 源码
 │   ├── opencc_bridge.h               # C API 头文件 (extern "C")
 │   ├── opencc_bridge.cpp             # Dart FFI 桥接 (Config/Converter/LRUCache)
-│   ├── LRUCache.h                    # 线程安全 LRU 缓存 (来自 android-opencc)
-│   ├── LRUCache.cpp
-│   ├── OpenCC/                       # OpenCC 官方源代码 (BYVoid/OpenCC)
+│   ├── LRUCache.h / LRUCache.cpp     # 线程安全 LRU 缓存
+│   ├── OpenCC/                       # OpenCC 官方源代码 (git submodule)
 │   │   ├── src/                      # 26 个 .cpp + 头文件
 │   │   └── deps/                     # 依赖: darts-clone, marisa, rapidjson
-│   └── xxHash/                       # xxHash 官方源代码
-│       ├── xxhash.h
-│       ├── xxh3.h
-│       └── xxhash.c
+│   └── xxHash/                       # xxHash 官方源代码 (git submodule)
+├── dic_tools/                        # 🔧 字典生成工具
+│   ├── CMakeLists.txt                # 从源码编译 opencc_dict
+│   ├── generate_dicts.py             # 一键生成所有 .ocd2 字典
+│   ├── generate_dicts.ps1            # PowerShell 包装脚本
+│   ├── generate_dicts.sh             # Shell 包装脚本
+│   └── README.md                     # 字典生成说明
 ├── android/
 │   ├── CMakeLists.txt                # Android NDK CMake 构建
 │   └── build.gradle                  # Android Gradle 配置
@@ -120,7 +148,7 @@ flutter_opencc/
 │   └── CMakeLists.txt                # Linux CMake 构建
 ├── example/
 │   └── lib/
-│       └── main.dart                 # 示例应用
+│       └── main.dart                 # 示例应用（使用 OpenCCData.prepareData）
 └── pubspec.yaml
 ```
 
@@ -142,56 +170,34 @@ flutter_opencc/
 - GCC 10+ 或 Clang 12+
 - CMake 3.12+
 
-## 📦 准备 OpenCC 源码
+## 📦 初始化子模块
 
-将 OpenCC 和 xxHash 官方源码放入 `src/` 目录：
+本项目使用 Git Submodule 管理 OpenCC 和 xxHash 源码：
 
 ```bash
-# 从本地 android-opencc 项目复制（推荐）
-cp -r <path>/android-opencc/lib-opencc-android/src/main/jni/OpenCC   src/
-cp -r <path>/android-opencc/lib-opencc-android/src/main/jni/xxHash   src/
-
-# 或从官方仓库克隆
-git clone https://github.com/BYVoid/OpenCC.git   src/OpenCC
-git clone https://github.com/Cyan4973/xxHash.git  src/xxHash
+git submodule update --init --recursive
 ```
 
-确保目录结构完整：
-- `src/OpenCC/src/` — 所有 `.cpp`/`.hpp` 文件
-- `src/OpenCC/deps/` — darts-clone、marisa、rapidjson
-- `src/xxHash/xxhash.h`、`xxh3.h`、`xxhash.c`
+这将检出：
+- `src/OpenCC` — BYVoid/OpenCC
+- `src/xxHash` — Cyan4973/xxHash
 
-## 📦 初始化字典数据
+## 📦 生成字典文件
 
-编译后，需要在运行时提供 OpenCC 字典数据文件：
+字典源文件位于 `src/OpenCC/data/`，使用 `dic_tools` 生成 `.ocd2` 二进制字典：
 
-### Android 示例（从 assets 复制）
+```bash
+# 安装 opencc CLI（需含 opencc_dict 工具）
+scoop install opencc          # Windows
+brew install opencc           # macOS
+apt install opencc            # Debian/Ubuntu
 
-```dart
-import 'package:flutter/services.dart';
-import 'dart:io';
-
-Future<String> initOpenCCData() async {
-  final appDir = await getApplicationDocumentsDirectory();
-  final dataDir = Directory('${appDir.path}/openccdata');
-  
-  if (!dataDir.exists()) {
-    dataDir.createSync();
-    // 从 assets 复制字典文件
-    final manifest = await rootBundle.loadString('AssetManifest.json');
-    final assets = manifest.split('\n')
-        .where((line) => line.startsWith('assets/openccdata/'))
-        .toList();
-    for (final asset in assets) {
-      final fileName = asset.split('/').last.trim().replaceAll('"', '');
-      final bytes = await rootBundle.load('assets/openccdata/$fileName');
-      final file = File('${dataDir.path}/$fileName');
-      await file.writeAsBytes(bytes.buffer.asUint8List());
-    }
-  }
-  return dataDir.path;
-}
+# 生成字典
+cd dic_tools
+python3 generate_dicts.py
 ```
+
+生成的字典和配置文件会输出到 `dic_tools/assets/openccdata/`，然后可复制到 `assets/openccdata/` 更新内建字典。
 
 ## 🔄 与 Platform Channel 方案的对比
 
