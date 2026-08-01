@@ -1,6 +1,6 @@
 # Flutter OpenCC
 
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **Flutter OpenCC** 是一个使用 Dart FFI 集成 [OpenCC (Open Chinese Convert)](https://github.com/BYVoid/OpenCC) 的 Flutter 插件，提供简繁转换及地区词汇转换能力。
 
@@ -211,9 +211,10 @@ python3 generate_dicts.py
 
 ## 📄 许可证
 
-本项目基于 **Apache License 2.0** 开源。OpenCC 本身使用 Apache License 2.0。
+本项目基于 **MIT License** 开源。OpenCC 本身使用 Apache License 2.0。
 
 ## 🙏 致谢
 
 - [BYVoid/OpenCC](https://github.com/BYVoid/OpenCC) — 开源中文转换库
+- [Cyan4973/xxHash](https://github.com/Cyan4973/xxHash) — 用于缓存的哈希计算
 - [android-opencc](https://github.com/xyrlsz/android-opencc) — Android JNI 版 OpenCC（本项目的参考实现）

@@ -10,8 +10,8 @@ Pod::Spec.new do |s|
   Traditional Chinese, and regional variants (Taiwan, Hong Kong, Japan).
                        DESC
   s.homepage         = 'https://github.com/xyrlsz/flutter_opencc'
-  s.license          = { :type => 'Apache-2.0' }
-  s.author           = { 'xyrlsz' => 'xyrlsz@example.com' }
+  s.license          = { :type => 'MIT' }
+  s.author           = 'xyrlsz'
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
   s.dependency 'Flutter'
